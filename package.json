@@ -40,9 +40,7 @@
         "fmt": "npm run fmt:sol && npm run fmt:ts",
         "fmt:sol": "prettier 'contracts/**/*.sol' -w",
         "fmt:ts": "prettier 'src/**/*.ts' 'test/**/*.ts' -w",
-        "prepack": "npm run build",
-        "prepare": "husky",
-        "prepublish": "rimraf build && npm run build && npm run build:zk && npm run build:ts"
+        "prepare": "husky"
     },
     "repository": {
         "type": "git",
@@ -90,7 +88,7 @@
         "@nomicfoundation/hardhat-ethers": "4.0.0-next.3",
         "@nomicfoundation/hardhat-ethers-chai-matchers": "^3.0.0-next.3",
         "@nomicfoundation/hardhat-mocha": "^3.0.0-next.3",
-        "hardhat": "^3.0.0-next.3",
+        "hardhat": "^3.0.0-next.4",
         "mocha": "^11.1.0"
     },
     "type": "module"
