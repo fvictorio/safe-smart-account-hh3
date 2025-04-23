@@ -59,12 +59,6 @@
     },
     "devDependencies": {
         "@eslint/js": "^9.9.1",
-        "@matterlabs/hardhat-zksync-deploy": "^1.6.0",
-        "@matterlabs/hardhat-zksync-ethers": "^1.2.1",
-        "@matterlabs/hardhat-zksync-node": "^1.2.1",
-        "@matterlabs/hardhat-zksync-solc": "^1.2.5",
-        "@matterlabs/hardhat-zksync-verify": "^1.7.1",
-        "@nomicfoundation/hardhat-toolbox": "^5.0.0",
         "@openzeppelin/contracts": "^3.4.0",
         "@safe-global/mock-contract": "^4.1.0",
         "@safe-global/safe-singleton-factory": "^1.0.33",
@@ -80,8 +74,6 @@
         "eslint-config-prettier": "^9.1.0",
         "eslint-plugin-no-only-tests": "^3.3.0",
         "eslint-plugin-prettier": "^5.2.1",
-        "hardhat": "^2.22.17",
-        "hardhat-deploy": "^0.12.4",
         "husky": "^9.1.5",
         "prettier": "^3.3.3",
         "prettier-plugin-solidity": "^1.4.1",
@@ -93,5 +85,13 @@
         "typescript-eslint": "^8.4.0",
         "yargs": "^17.7.2",
         "zksync-ethers": "6.15.3"
-    }
+    },
+    "dependencies": {
+        "@nomicfoundation/hardhat-ethers": "4.0.0-next.3",
+        "@nomicfoundation/hardhat-ethers-chai-matchers": "^3.0.0-next.3",
+        "@nomicfoundation/hardhat-mocha": "^3.0.0-next.3",
+        "hardhat": "^3.0.0-next.3",
+        "mocha": "^11.1.0"
+    },
+    "type": "module"
 }
