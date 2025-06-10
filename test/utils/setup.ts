@@ -1,13 +1,13 @@
-import hre, { deployments } from "hardhat";
-import { Contract, Signer, ethers } from "ethers";
-import { AddressZero } from "@ethersproject/constants";
+// import hre, { deployments } from "hardhat";
+import hre from "hardhat";
+import { Contract, Signer, ethers, ZeroAddress as AddressZero } from "ethers";
 import solc from "solc";
-import * as zk from "zksync-ethers";
-import { logGas } from "../../src/utils/execution";
-import { safeContractUnderTest } from "./config";
-import { zkCompile } from "./zkSync";
-import { getRandomIntAsString } from "./numbers";
-import { MockContract, Safe, SafeL2 } from "../../typechain-types";
+// import * as zk from "zksync-ethers";
+import { logGas } from "../../src/utils/execution.js";
+import { safeContractUnderTest } from "./config.js";
+// import { zkCompile } from "./zkSync.js";
+import { getRandomIntAsString } from "./numbers.js";
+import { MockContract, Safe, SafeL2 } from "../../types/ethers-contracts/index.js";
 
 type SafeSingleton = {
     readonly singleton?: Safe | SafeL2;
@@ -28,32 +28,35 @@ type LogGas = {
 
 type GetSafeParameters = SafeSingleton & SafeWithSetupConfig & LogGas;
 
-export const defaultTokenCallbackHandlerDeployment = async () => {
-    return deployments.get("TokenCallbackHandler");
-};
+// export const defaultTokenCallbackHandlerDeployment = async () => {
+//     return deployments.get("TokenCallbackHandler");
+// };
+
+const { deployments } = await hre.network.connect();
 
 export const getSafeSingleton = async () => {
     const safeContractName = safeContractUnderTest();
-    const safe = await hre.ethers.getContractAt(safeContractUnderTest(), (await deployments.get(safeContractName)).address);
+    const { ethers } = await hre.network.connect();
+    const safe = await ethers.getContractAt(safeContractUnderTest(), (await deployments.get(safeContractName)).address);
     return safe as unknown as Safe | SafeL2;
 };
 
-export const getSafeL1Singleton = async (): Promise<Safe> => {
-    const safeSingletonDeployment = await deployments.get("Safe");
-    const Safe = await hre.ethers.getContractAt("Safe", safeSingletonDeployment.address);
-    return Safe;
-};
+// export const getSafeL1Singleton = async (): Promise<Safe> => {
+//     const safeSingletonDeployment = await deployments.get("Safe");
+//     const Safe = await hre.ethers.getContractAt("Safe", safeSingletonDeployment.address);
+//     return Safe;
+// };
 
-export const getSafeL2Singleton = async (): Promise<SafeL2> => {
-    const safeSingletonDeployment = await deployments.get("SafeL2");
-    const Safe = await hre.ethers.getContractAt("SafeL2", safeSingletonDeployment.address);
-    return Safe;
-};
+// export const getSafeL2Singleton = async (): Promise<SafeL2> => {
+//     const safeSingletonDeployment = await deployments.get("SafeL2");
+//     const Safe = await hre.ethers.getContractAt("SafeL2", safeSingletonDeployment.address);
+//     return Safe;
+// };
 
-export const getSafeSingletonAt = async (address: string) => {
-    const safe = await hre.ethers.getContractAt(safeContractUnderTest(), address);
-    return safe as unknown as Safe | SafeL2;
-};
+// export const getSafeSingletonAt = async (address: string) => {
+//     const safe = await hre.ethers.getContractAt(safeContractUnderTest(), address);
+//     return safe as unknown as Safe | SafeL2;
+// };
 
 export const getFactory = async (address?: string) => {
     if (!address) {
@@ -61,50 +64,51 @@ export const getFactory = async (address?: string) => {
         address = factoryDeployment.address;
     }
 
-    const Factory = await hre.ethers.getContractAt("SafeProxyFactory", address);
+    const { ethers } = await hre.network.connect();
+    const Factory = await ethers.getContractAt("SafeProxyFactory", address!);
     return Factory;
 };
 
-export const getSimulateTxAccessor = async () => {
-    const SimulateTxAccessor = await hre.ethers.getContractAt("SimulateTxAccessor", (await deployments.get("SimulateTxAccessor")).address);
-    return SimulateTxAccessor;
-};
+// export const getSimulateTxAccessor = async () => {
+//     const SimulateTxAccessor = await hre.ethers.getContractAt("SimulateTxAccessor", (await deployments.get("SimulateTxAccessor")).address);
+//     return SimulateTxAccessor;
+// };
 
-export const getMultiSend = async () => {
-    const MultiSend = await hre.ethers.getContractAt("MultiSend", (await deployments.get("MultiSend")).address);
-    return MultiSend;
-};
+// export const getMultiSend = async () => {
+//     const MultiSend = await hre.ethers.getContractAt("MultiSend", (await deployments.get("MultiSend")).address);
+//     return MultiSend;
+// };
 
-export const getMultiSendCallOnly = async () => {
-    const MultiSend = await hre.ethers.getContractAt("MultiSendCallOnly", (await deployments.get("MultiSendCallOnly")).address);
-    return MultiSend;
-};
+// export const getMultiSendCallOnly = async () => {
+//     const MultiSend = await hre.ethers.getContractAt("MultiSendCallOnly", (await deployments.get("MultiSendCallOnly")).address);
+//     return MultiSend;
+// };
 
-export const getCreateCall = async () => {
-    const CreateCall = await hre.ethers.getContractAt("CreateCall", (await deployments.get("CreateCall")).address);
-    return CreateCall;
-};
+// export const getCreateCall = async () => {
+//     const CreateCall = await hre.ethers.getContractAt("CreateCall", (await deployments.get("CreateCall")).address);
+//     return CreateCall;
+// };
 
-export const migrationContractFactory = async () => {
-    return await hre.ethers.getContractFactory("Migration");
-};
+// export const migrationContractFactory = async () => {
+//     return await hre.ethers.getContractFactory("Migration");
+// };
 
-export const safeMigrationContract = async () => {
-    const safeMigration = await hre.ethers.getContractAt("SafeMigration", (await deployments.get("SafeMigration")).address);
-    return safeMigration;
-};
+// export const safeMigrationContract = async () => {
+//     const safeMigration = await hre.ethers.getContractAt("SafeMigration", (await deployments.get("SafeMigration")).address);
+//     return safeMigration;
+// };
 
-export const getMock = async (): Promise<MockContract> => {
-    const contractFactory = await hre.ethers.getContractFactory("MockContract");
-    const contract = await contractFactory.deploy();
+// export const getMock = async (): Promise<MockContract> => {
+//     const contractFactory = await hre.ethers.getContractFactory("MockContract");
+//     const contract = await contractFactory.deploy();
 
-    return contract;
-};
+//     return contract;
+// };
 
-export const getSafeTemplate = async (saltNumber: string = getRandomIntAsString()) => {
-    const singleton = await getSafeSingleton();
-    return getSafeTemplateWithSingleton(singleton, saltNumber);
-};
+// export const getSafeTemplate = async (saltNumber: string = getRandomIntAsString()) => {
+//     const singleton = await getSafeSingleton();
+//     return getSafeTemplateWithSingleton(singleton, saltNumber);
+// };
 
 export const getSafeTemplateWithSingleton = async (singleton: Contract | Safe, saltNumber: string = getRandomIntAsString()) => {
     const singletonAddress = await singleton.getAddress();
@@ -135,48 +139,48 @@ export const getSafe = async (safe: GetSafeParameters) => {
     return template;
 };
 
-export const getTokenCallbackHandler = async (address?: string) => {
-    if (!address) {
-        const tokenCallbackHandlerDeployment = await defaultTokenCallbackHandlerDeployment();
-        address = tokenCallbackHandlerDeployment.address;
-    }
+// export const getTokenCallbackHandler = async (address?: string) => {
+//     if (!address) {
+//         const tokenCallbackHandlerDeployment = await defaultTokenCallbackHandlerDeployment();
+//         address = tokenCallbackHandlerDeployment.address;
+//     }
 
-    const tokenCallbackHandler = await hre.ethers.getContractAt("TokenCallbackHandler", address);
-    return tokenCallbackHandler;
-};
+//     const tokenCallbackHandler = await hre.ethers.getContractAt("TokenCallbackHandler", address);
+//     return tokenCallbackHandler;
+// };
 
-export const getCompatFallbackHandler = async (address?: string) => {
-    if (!address) {
-        const fallbackHandlerDeployment = await deployments.get("CompatibilityFallbackHandler");
-        address = fallbackHandlerDeployment.address;
-    }
+// export const getCompatFallbackHandler = async (address?: string) => {
+//     if (!address) {
+//         const fallbackHandlerDeployment = await deployments.get("CompatibilityFallbackHandler");
+//         address = fallbackHandlerDeployment.address;
+//     }
 
-    const fallbackHandler = await hre.ethers.getContractAt("CompatibilityFallbackHandler", address);
+//     const fallbackHandler = await hre.ethers.getContractAt("CompatibilityFallbackHandler", address);
 
-    return fallbackHandler;
-};
+//     return fallbackHandler;
+// };
 
-export const getExtensibleFallbackHandler = async (address?: string) => {
-    if (!address) {
-        const extensibleFallbackHandlerAddress = await deployments.get("ExtensibleFallbackHandler");
-        address = extensibleFallbackHandlerAddress.address;
-    }
+// export const getExtensibleFallbackHandler = async (address?: string) => {
+//     if (!address) {
+//         const extensibleFallbackHandlerAddress = await deployments.get("ExtensibleFallbackHandler");
+//         address = extensibleFallbackHandlerAddress.address;
+//     }
 
-    const extensibleFallbackHandler = await hre.ethers.getContractAt("ExtensibleFallbackHandler", address);
+//     const extensibleFallbackHandler = await hre.ethers.getContractAt("ExtensibleFallbackHandler", address);
 
-    return extensibleFallbackHandler;
-};
+//     return extensibleFallbackHandler;
+// };
 
-export const getSafeProxyRuntimeCode = async (): Promise<string> => {
-    const proxyArtifact = await hre.artifacts.readArtifact("SafeProxy");
+// export const getSafeProxyRuntimeCode = async (): Promise<string> => {
+//     const proxyArtifact = await hre.artifacts.readArtifact("SafeProxy");
 
-    return proxyArtifact.deployedBytecode;
-};
+//     return proxyArtifact.deployedBytecode;
+// };
 
-export const getDelegateCaller = async () => {
-    const DelegateCaller = await hre.ethers.getContractFactory("DelegateCaller");
-    return await DelegateCaller.deploy();
-};
+// export const getDelegateCaller = async () => {
+//     const DelegateCaller = await hre.ethers.getContractFactory("DelegateCaller");
+//     return await DelegateCaller.deploy();
+// };
 
 export const compile = async (source: string) => {
     const input = JSON.stringify({
@@ -211,38 +215,29 @@ export const compile = async (source: string) => {
 };
 
 export const deployContractFromSource = async (deployer: Signer, source: string): Promise<ethers.Contract> => {
-    if (!hre.network.zksync) {
-        const output = await compile(source);
-        const transaction = await deployer.sendTransaction({ data: output.data, gasLimit: 6000000 });
-        const receipt = await transaction.wait();
+    const output = await compile(source);
+    const transaction = await deployer.sendTransaction({ data: output.data, gasLimit: 6000000 });
+    const receipt = await transaction.wait();
 
-        if (!receipt?.contractAddress) {
-            throw Error("Could not deploy contract");
-        }
-
-        return new Contract(receipt.contractAddress, output.interface, deployer);
-    } else {
-        const output = await zkCompile(hre, source);
-        const signers = await hre.ethers.getSigners();
-        const factory = new zk.ContractFactory(output.abi, output.bytecode, signers[0], "create");
-        const contract = await factory.deploy();
-
-        return contract as ethers.Contract;
-    }
-};
-
-export const getSignMessageLib = async () => {
-    const SignMessageLibDeployment = await deployments.get("SignMessageLib");
-    const SignMessageLib = await hre.ethers.getContractAt("SignMessageLib", SignMessageLibDeployment.address);
-
-    return SignMessageLib;
-};
-
-export const getAbi = async (name: string) => {
-    const artifact = await hre.artifacts.readArtifact(name);
-    if (!artifact) {
-        throw Error(`Could not read artifact for ${name}`);
+    if (!receipt?.contractAddress) {
+        throw Error("Could not deploy contract");
     }
 
-    return artifact.abi;
+    return new Contract(receipt.contractAddress, output.interface, deployer);
 };
+
+// export const getSignMessageLib = async () => {
+//     const SignMessageLibDeployment = await deployments.get("SignMessageLib");
+//     const SignMessageLib = await hre.ethers.getContractAt("SignMessageLib", SignMessageLibDeployment.address);
+
+//     return SignMessageLib;
+// };
+
+// export const getAbi = async (name: string) => {
+//     const artifact = await hre.artifacts.readArtifact(name);
+//     if (!artifact) {
+//         throw Error(`Could not read artifact for ${name}`);
+//     }
+
+//     return artifact.abi;
+// };

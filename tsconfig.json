@@ -22,12 +22,13 @@
     "exclude": ["dist", "node_modules"],
     "include": [
         "./src/index.ts",
-        "./types",
+        "./types/**/*",
         "./test/**/*",
         "./typechain-types/",
         "./benchmark/**/*",
         "./src/deploy/**/*",
-        "src/utils/**/*"
+        "src/utils/**/*",
+        "type-extensions.d.ts"
     ],
     "files": ["./hardhat.config.ts"]
 }

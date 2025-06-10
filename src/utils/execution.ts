@@ -1,7 +1,6 @@
-import { Signer, BigNumberish, BaseContract, ethers } from "ethers";
-import { AddressZero } from "@ethersproject/constants";
-import { Safe } from "../../typechain-types";
-import { PayableOverrides } from "../../typechain-types/common";
+import { Signer, BigNumberish, BaseContract, ethers, ZeroAddress as AddressZero } from "ethers";
+import { Safe } from "../../types/ethers-contracts/index.js";
+import { PayableOverrides } from "../../types/ethers-contracts/common.js";
 
 export const EIP_DOMAIN = {
     EIP712Domain: [
